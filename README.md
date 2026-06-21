@@ -9,7 +9,8 @@
 - 已按参考个例命名整理 MATLAB 流水线：`SAR_lat_lon_inc.m`、`ERA5_read_match.m`、`Inverse.m`、`Check.m`、`Toexcel.m`
 - 已按老师参考风格生成两张 PNG 验证图：样本风速对比图和 RMSE 散点图
 - 已在验证阶段标记并剔除边界反演点，避免 0.1 m/s 搜索下限点进入最终图件
-- 已根据 docx 模板整理报告写作清单：`report/报告写作清单.md`
+- 已使用 Surfer 生成三张空间分布图：SAR 反演风速、ERA5 风速、SAR 与 ERA5 风速差值
+- 已根据 docx 模板整理报告写作清单和大纲：`report/报告写作清单.md`、`report/报告写作大纲.md`
 - 已记录项目路线与问题：`项目开展说明.md`、`项目进度记录.md`
 
 ## 数据说明
@@ -49,6 +50,17 @@ run("code/Toexcel.m")
 ```
 
 默认输出目录为 `lon_lat_20260611/`，包含 `lon.dat`、`lat.dat`、`inc.dat`、`sig.dat`、`wind_speed.dat`、`dir.dat`、`sar_wind_speed.dat`、评估表和 PNG 图件。
+
+报告插图已整理到 `report/figure/`，主要包括：
+
+```text
+卫星数据下载界面.png
+WS_20260611_sample.png
+WS_20260611_rmse.png
+SAR反演风速空间分布图.png
+ERA5风速空间分布图.png
+SAR与ERA5风速差值空间分布图.png
+```
 
 ## 结果与评估
 
@@ -93,6 +105,8 @@ R：0.5793
 ```
 
 全部有效点中有 38 个结果落在 `0.1 m/s` 附近的搜索下限，主要集中在左上角近岸区域。最终验证图不绘制这些边界反演点，结果表中保留 `Is_Lower_Bound_Result` 字段用于说明。
+
+Surfer 空间分布图已完成，可在报告第三章说明：SAR 反演风速保留更细的空间变化，ERA5 风场更平滑，差值较大的区域主要出现在近岸或低质量后向散射区域。
 
 ## Git 管理
 

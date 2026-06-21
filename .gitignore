@@ -18,6 +18,9 @@ lon_lat_*/
 *.tif
 *.tiff
 *.png
+*.grd
+*.gsr2
+*.bln
 
 # Large local data products
 数据/*
