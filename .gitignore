@@ -12,6 +12,7 @@ env/
 
 # Generated outputs from the processing pipeline
 lon_lat_*/
+结果_*/
 *.dat
 *.xlsx
 *.tif
