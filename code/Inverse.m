@@ -1,8 +1,8 @@
 clc;
 clear;
 
-% 实验名称用于定位前序输出
-experiment_name = '墨西哥湾_20260611';
+% 实验标识用于定位前序输出
+sar_dir = '20260611';
 
 % CMOD5.N 经验系数用于计算理论后向散射
 cmod5n_coefficients = [ ...
@@ -27,10 +27,8 @@ incident_max = 60;
 % 读取项目路径和中间结果路径
 script_path = mfilename('fullpath');
 project_root = fileparts(fileparts(script_path));
-output_dir = fullfile(project_root, ['结果_', experiment_name]);
-intermediate_dir = fullfile(output_dir, '01_中间数据');
-grid_data_dir = fullfile(output_dir, '02_网格数据');
-sar_info_path = fullfile(intermediate_dir, 'SAR_info_25x25.mat');
+lon_lat_folder = fullfile(project_root, ['lon_lat_', sar_dir]);
+sar_info_path = fullfile(lon_lat_folder, 'SAR_info_25x25.mat');
 
 % 载入 SAR 和 ERA5 匹配结果
 if ~exist(sar_info_path, 'file')
@@ -72,19 +70,19 @@ end
 
 % 保存反演结果
 save(sar_info_path, ...
-    'experiment_name', 'output_dir', 'intermediate_dir', 'grid_data_dir', ...
+    'sar_dir', 'lon_lat_folder', ...
     'small_arealon', 'small_arealat', 'small_areainc', 'small_areasig', ...
     'small_wind_speed', 'small_wind_dir', ...
     'sar_wind_speed', 'minimum_residual', ...
     '-append');
 
-write_matrix_dat(fullfile(grid_data_dir, 'SAR反演风速.dat'), sar_wind_speed);
-write_matrix_dat(fullfile(grid_data_dir, 'CMOD最小残差.dat'), minimum_residual);
+write_matrix_dat(fullfile(lon_lat_folder, 'sar_wind_speed.dat'), sar_wind_speed);
+write_matrix_dat(fullfile(lon_lat_folder, 'cmod_residual.dat'), minimum_residual);
 
 valid_retrieval_count = sum(isfinite(sar_wind_speed(:)));
 fprintf('第三步完成：SAR 海面风速反演结束。\n');
 fprintf('有效反演点数：%d 个\n', valid_retrieval_count);
-fprintf('结果目录：%s\n', output_dir);
+fprintf('结果目录：%s\n', lon_lat_folder);
 
 function is_valid = is_valid_input(observed_sigma, incident_angle, wind_direction, incident_min, incident_max)
 % 判断当前格点是否可参与反演

@@ -1,8 +1,8 @@
 clc;
 clear;
 
-% 实验名称用于定位最终结果
-experiment_name = '墨西哥湾_20260611';
+% 实验标识用于定位最终结果
+sar_dir = '20260611';
 
 % 预览行数用于控制台检查
 preview_row_count = 5;
@@ -10,15 +10,13 @@ preview_row_count = 5;
 % 读取项目路径和中间结果路径
 script_path = mfilename('fullpath');
 project_root = fileparts(fileparts(script_path));
-output_dir = fullfile(project_root, ['结果_', experiment_name]);
-intermediate_dir = fullfile(output_dir, '01_中间数据');
-table_dir = fullfile(output_dir, '03_结果表格');
-sar_info_path = fullfile(intermediate_dir, 'SAR_info_25x25.mat');
-excel_path = fullfile(table_dir, '海面风速反演结果.xlsx');
+lon_lat_folder = fullfile(project_root, ['lon_lat_', sar_dir]);
+sar_info_path = fullfile(lon_lat_folder, 'SAR_info_25x25.mat');
+excel_path = fullfile(lon_lat_folder, ['WSresult_', sar_dir, '.xlsx']);
 
-% 创建表格输出目录
-if ~exist(table_dir, 'dir')
-    mkdir(table_dir);
+% 创建结果目录
+if ~exist(lon_lat_folder, 'dir')
+    mkdir(lon_lat_folder);
 end
 
 % 载入最终结果
@@ -30,7 +28,7 @@ load(sar_info_path, ...
     'small_wind_speed', 'small_wind_dir', 'sar_wind_speed', 'minimum_residual');
 
 % 载入样本筛选结果
-validation_path = fullfile(intermediate_dir, '验证指标.mat');
+validation_path = sar_info_path;
 if exist(validation_path, 'file')
     load(validation_path, 'wind_error', 'abs_wind_error', 'model_quality_mask', 'strict_model_quality_mask', 'lower_bound_mask');
 else

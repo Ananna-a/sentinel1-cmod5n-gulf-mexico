@@ -17,6 +17,7 @@ lon_lat_*/
 *.xlsx
 *.tif
 *.tiff
+*.png
 
 # Large local data products
 数据/*
@@ -29,6 +30,8 @@ report/
 
 # Reference code from others; keep local only
 参考/
+老师参考/
+同学参考/
 
 # OS/editor noise
 .DS_Store

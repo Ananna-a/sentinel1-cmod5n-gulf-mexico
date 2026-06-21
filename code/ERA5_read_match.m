@@ -1,8 +1,8 @@
 clc;
 clear;
 
-% 实验名称用于定位第一步输出
-experiment_name = '墨西哥湾_20260611';
+% 实验标识用于定位第一步输出
+sar_dir = '20260611';
 
 % ERA5 文件名来自下载脚本输出
 era5_file_name = 'era5_wind_gulf_mexico_20260611_0000.nc';
@@ -15,15 +15,13 @@ longitude_wrap_offset = 360;
 script_path = mfilename('fullpath');
 project_root = fileparts(fileparts(script_path));
 data_dir = fullfile(project_root, '数据');
-output_dir = fullfile(project_root, ['结果_', experiment_name]);
-intermediate_dir = fullfile(output_dir, '01_中间数据');
-grid_data_dir = fullfile(output_dir, '02_网格数据');
-sar_info_path = fullfile(intermediate_dir, 'SAR_info_25x25.mat');
+lon_lat_folder = fullfile(project_root, ['lon_lat_', sar_dir]);
+sar_info_path = fullfile(lon_lat_folder, 'SAR_info_25x25.mat');
 era5_path = fullfile(data_dir, era5_file_name);
 
 % 载入 SAR 25x25 抽样网格
 if ~exist(sar_info_path, 'file')
-    error('未找到第一步结果，请先运行 code/step_01_extract_sar_grid.m');
+    error('未找到第一步结果，请先运行 code/SAR_lat_lon_inc.m');
 end
 load(sar_info_path, 'small_arealon', 'small_arealat', 'small_areainc', 'small_areasig');
 
@@ -67,16 +65,16 @@ small_wind_dir = mod(small_wind_dir, longitude_wrap_offset);
 
 % 保存匹配结果
 save(sar_info_path, ...
-    'experiment_name', 'output_dir', 'intermediate_dir', 'grid_data_dir', ...
+    'sar_dir', 'lon_lat_folder', ...
     'small_arealon', 'small_arealat', 'small_areainc', 'small_areasig', ...
     'small_u10', 'small_v10', 'small_wind_speed', 'small_wind_dir', ...
     '-append');
 
-write_matrix_dat(fullfile(grid_data_dir, 'ERA5风速.dat'), small_wind_speed);
-write_matrix_dat(fullfile(grid_data_dir, 'ERA5风向.dat'), small_wind_dir);
+write_matrix_dat(fullfile(lon_lat_folder, 'wind_speed.dat'), small_wind_speed);
+write_matrix_dat(fullfile(lon_lat_folder, 'dir.dat'), small_wind_dir);
 
 fprintf('第二步完成：ERA5 风速风向已匹配到 SAR 网格。\n');
-fprintf('结果目录：%s\n', output_dir);
+fprintf('结果目录：%s\n', lon_lat_folder);
 
 function write_matrix_dat(file_path, matrix_data)
 % 将矩阵写为文本数据文件

@@ -1,8 +1,8 @@
 clc;
 clear;
 
-% 实验名称用于组织输出目录
-experiment_name = '墨西哥湾_20260611';
+% 实验标识用于组织输出目录
+sar_dir = '20260611';
 
 % SAR 影像尺寸来自 BEAM-DIMAP 元数据
 raster_row_count = 14504;
@@ -33,9 +33,7 @@ script_path = mfilename('fullpath');
 project_root = fileparts(fileparts(script_path));
 data_dir = fullfile(project_root, '数据');
 beam_data_dir = fullfile(data_dir, 'S1A_GulfMexico_20260610_Cal_Deb.data');
-output_dir = fullfile(project_root, ['结果_', experiment_name]);
-intermediate_dir = fullfile(output_dir, '01_中间数据');
-grid_data_dir = fullfile(output_dir, '02_网格数据');
+lon_lat_folder = fullfile(project_root, ['lon_lat_', sar_dir]);
 
 sigma_path = fullfile(beam_data_dir, 'Sigma0_VV.img');
 tie_dir = fullfile(beam_data_dir, 'tie_point_grids');
@@ -44,9 +42,7 @@ longitude_path = fullfile(tie_dir, 'longitude.img');
 incident_path = fullfile(tie_dir, 'incident_angle.img');
 
 % 创建结果目录
-create_directory(output_dir);
-create_directory(intermediate_dir);
-create_directory(grid_data_dir);
+create_directory(lon_lat_folder);
 
 % 计算 25x25 子块中心像元位置
 row_block_size = floor(raster_row_count / sample_grid_count);
@@ -80,21 +76,20 @@ fprintf('正在按 25x25 子块读取 Sigma0_VV 后向散射统计量...\n');
 invalid_sigma_count = sum(~isfinite(small_areasig(:)) | small_areasig(:) <= 0);
 
 % 保存 MATLAB 中间结果和文本文件
-sar_info_path = fullfile(intermediate_dir, 'SAR_info_25x25.mat');
+sar_info_path = fullfile(lon_lat_folder, 'SAR_info_25x25.mat');
 save(sar_info_path, ...
-    'experiment_name', 'output_dir', 'intermediate_dir', 'grid_data_dir', ...
+    'sar_dir', 'lon_lat_folder', ...
     'sample_rows', 'sample_cols', 'sample_row_grid', 'sample_col_grid', ...
     'small_arealon', 'small_arealat', 'small_areainc', 'small_areasig', ...
     'sigma_sample_mean', 'sigma_sample_std', 'sigma_valid_ratio', 'invalid_sigma_count');
 
-write_matrix_dat(fullfile(grid_data_dir, '经度.dat'), small_arealon);
-write_matrix_dat(fullfile(grid_data_dir, '纬度.dat'), small_arealat);
-write_matrix_dat(fullfile(grid_data_dir, '入射角.dat'), small_areainc);
-write_matrix_dat(fullfile(grid_data_dir, '后向散射系数.dat'), small_areasig);
-write_matrix_dat(fullfile(grid_data_dir, '后向散射有效比例.dat'), sigma_valid_ratio);
+write_matrix_dat(fullfile(lon_lat_folder, 'lon.dat'), small_arealon);
+write_matrix_dat(fullfile(lon_lat_folder, 'lat.dat'), small_arealat);
+write_matrix_dat(fullfile(lon_lat_folder, 'inc.dat'), small_areainc);
+write_matrix_dat(fullfile(lon_lat_folder, 'sig.dat'), small_areasig);
 
 fprintf('第一步完成：已生成 25x25 SAR 抽样网格。\n');
-fprintf('结果目录：%s\n', output_dir);
+fprintf('结果目录：%s\n', lon_lat_folder);
 fprintf('无效或零值后向散射点：%d 个\n', invalid_sigma_count);
 
 function create_directory(directory_path)
