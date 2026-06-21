@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# MATLAB generated files
+*.asv
+*.fig
+*.mat
+
+# Generated outputs from the processing pipeline
+lon_lat_*/
+*.dat
+*.xlsx
+*.tif
+*.tiff
+
+# Large local data products
+数据/*
+!数据/.gitkeep
+
+# Course/report documents not intended for GitHub
+report/
+*.docx
+~$*.docx
+
+# Reference code from others; keep local only
+参考/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
