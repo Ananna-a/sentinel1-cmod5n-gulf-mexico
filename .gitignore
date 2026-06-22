@@ -10,33 +10,37 @@ env/
 *.fig
 *.mat
 
-# Generated outputs from the processing pipeline
+# 数据处理流水线输出目录
 lon_lat_*/
 结果_*/
 *.dat
 *.xlsx
 *.tif
 *.tiff
-*.png
 *.grd
 *.gsr2
 *.bln
 
-# Large local data products
+# 大体积本地数据产品
 数据/*
 !数据/.gitkeep
 
-# Course/report documents not intended for GitHub
+# 课程报告相关文档，不入库
 report/
+
+# 课程文档（Word 格式，不入库）
 *.docx
 ~$*.docx
 
-# Reference code from others; keep local only
+# 提交压缩包
+*.zip
+
+# 他人参考代码，仅本地保留
 参考/
 老师参考/
 同学参考/
 
-# OS/editor noise
+# 系统/编辑器噪声文件
 .DS_Store
 Thumbs.db
 .idea/
